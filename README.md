@@ -1,6 +1,6 @@
 # Ukweli_Lens
 
-Truth Verifier (Fact-Checking Engine)s.
+Truth Verifier (Fact-Checking Engine).
 
 ## Overview
 
