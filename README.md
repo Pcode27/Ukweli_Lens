@@ -55,17 +55,6 @@ Example verify endpoint (POST):
 Invoke-WebRequest -Uri http://127.0.0.1:8000/api/verify/ -Method POST -ContentType "application/json" -Body '{"claim": "Your claim text here"}'
 ```
 
-## Files to keep locally
-
-Sensitive/large local files are intentionally untracked. Examples:
-
-- `PK Data Release Agreement.pdf`
-- `Problem Statement.docx`
-- `SAFE AI Teams.pdf`
-- `Team_FactCheckingEngine_Track_[1].docx`
-
-These files remain on local disk but are ignored by git.
-
 ## Contributing
 
 - Make small, focused commits.
@@ -74,8 +63,7 @@ These files remain on local disk but are ignored by git.
 
 ## License
 
-Add a license as appropriate.
+
 
 ---
 
-If you'd like, I can add a `requirements.txt` or minimal contributor guidelines next.
