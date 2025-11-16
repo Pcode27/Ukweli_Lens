@@ -60,3 +60,9 @@ chroma_db/
 # OS
 Thumbs.db
 .DS_Store
+
+# Local documents to keep locally
+PK Data Release Agreement.pdf
+Problem Statement.docx
+SAFE AI Teams.pdf
+Team_FactCheckingEngine_Track_[1].docx
