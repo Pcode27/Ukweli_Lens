@@ -1,10 +1,10 @@
 # Ukweli_Lens
 
-A small Django-based fact-checking assistant and API for Ukweli Lens.
+Truth Verifier (Fact-Checking Engine)s.
 
 ## Overview
 
-This repository contains the Ukweli_Lens project: a Django app with an API for claim verification and related utilities.
+This repository contains the Ukweli_Lens project: a multilingual AI fact-checking engine built for Kenya’s unique linguistic and cultural landscape. It detects and verifies misinformation in English, Kiswahili, and Sheng, with a special focus on Technology-Facilitated Gender-Based Violence (TFGBV) and high-risk political/ethnic incitement.
 
 ## Quick start
 
