@@ -1,86 +1,90 @@
-# Ukweli_Lens
+Ukweli_Lens
 
-Truth Verifier (Fact-Checking Engine).
+Truth Verifier (Fact-Checking Engine)
 
-## Overview
+Overview
 
-This repository contains the Ukweli_Lens project: a multilingual AI fact-checking engine built for Kenya’s unique linguistic and cultural landscape. It detects and verifies misinformation in English, Kiswahili, and Sheng, with a special focus on Technology-Facilitated Gender-Based Violence (TFGBV) and high-risk political/ethnic incitement.
+Ukweli_Lens is a multilingual AI fact-checking engine tailored for Kenya’s linguistic and cultural realities. It detects and verifies misinformation in English, Kiswahili, and Sheng, with a focus on:
+
+Technology-Facilitated Gender-Based Violence (TFGBV)
+
+High-risk political and ethnic incitement
 
 🎯 The Problem
 Digital Harm
 
-The rapid spread of Technology-Facilitated Gender-Based Violence (TFGBV) and politically motivated hate speech is fueling real-world harm, trauma, and distrust.
+The rise of TFGBV and politically motivated hate speech is leading to real-world harm, trauma, and growing distrust.
 
 The Language Gap
 
-Most global AI fact-checkers fail to understand local dialects like Sheng or the high-stakes cultural nuance of Swahili and code-switched phrases.
+Most global fact-checkers struggle to interpret dialects like Sheng or culturally nuanced Swahili expressions.
 
 The Context Gap
 
-Standard models cannot differentiate between a simple false claim and a dangerous, inflammatory statement (e.g., related to PEV 2007) that requires immediate, cautious handling.
+General-purpose models cannot distinguish simple falsehoods from dangerous statements that need urgent scrutiny.
 
-✨ Core Features 
-
+✨ Core Features
 1. Grounded RAG Verification
 
-The engine’s verdicts are grounded in a trusted “Source of Truth.”
-A RAG pipeline indexes and queries only verified Kenyan government publications (KNBS, NGEC) and academic/legal reports on GBV.
-The system never hallucinates an answer.
+Verdicts grounded in a trusted “Source of Truth.”
+
+RAG pipeline indexes verified Kenyan publications (KNBS, NGEC) and academic/legal GBV reports.
+
+System avoids hallucination by design.
 
 2. Socio-Cultural Nuance Engine
 
-This is the ethical core.
+A spaCy PhraseMatcher scans for high-risk multi-word terms.
 
-A spaCy PhraseMatcher scans claims for a curated list of high-risk keywords, including:
+Examples:
 
-Multi-word Sheng/Swahili:
+Sheng/Swahili:
+
 mtu wetu, watu wa mlima, kamatakamata
 
-PEV 2007 Incitement:
+PEV 2007-related incitement:
+
 madoadoa, kabila, ukabila
 
-TFGBV & Misogyny:
-asking for it, malaya, slay queen
+TFGBV & misogyny:
 
-3. The Ethical Risk Penalty ($R_T$)
+“asking for it”, malaya, “slay queen”
 
-A weighted penalty is applied to high-risk claims.
-This allows the system to identify claims that are not just false, but dangerous, and adjust its confidence.
+3. Ethical Risk Penalty ($R_T$)
 
-High-Risk (0.75 weight): GBV terms & PEV-related incitement
+A weighted penalty adjusts confidence for harmful or inflammatory claims.
 
-Low-Risk (0.25 weight): General political disinformation
+High-Risk (0.75): GBV terms & PEV-related incitement
+
+Low-Risk (0.25): General political misinformation
 
 4. Explainable AI (XAI) Verdict
 
-The API returns a complete JSON rationale, including:
+API returns a structured JSON packet containing:
 
-final_verdict (e.g., FALSE (REFUTED))
+final_verdict
 
 explainable_confidence_score
 
-top_evidence_snippet from trusted documents
+top_evidence_snippet
 
-xai_rationale (the penalty math)
+xai_rationale (penalty math included)
 
 🧠 How the XAI Works
 Final Score = Total_Evidence_Confidence * (1.0 - Ethical_Risk_Penalty)
 
 
-Total_Evidence_Confidence: Raw NLI stance score (−1.0 to +1.0)
+Total_Evidence_Confidence: NLI stance score (−1.0 → +1.0)
 
-Ethical_Risk_Penalty ($R_T$): Normalized risk score (0.0 → 1.0)
+Ethical_Risk_Penalty: Normalized risk value (0.0 → 1.0)
 
-This lets Ukweli-Lens be both accurate and responsible.
+Example
 
-Example:
-A claim like “She was asking for it” becomes:
+Claim: “She was asking for it”
 
-INCONCLUSIVE (0.0) confidence
+Confidence: 0.0 (inconclusive)
 
-High risk penalty (e.g., 0.25)
-
-Showing the system understands the claim is both unverifiable and toxic.
+High risk penalty applied → system detects toxicity even when unverifiable
 
 🛠 Tech Stack & Models
 Backend
@@ -99,7 +103,7 @@ Data Ingestion
 
 LangChain (PyPDFLoader, RecursiveCharacterTextSplitter)
 
-Core Models
+Models
 
 Retrieval: multi-qa-mpnet-base-dot-v1
 
@@ -113,7 +117,7 @@ Nuance: spaCy (en_core_web_sm) + PhraseMatcher
 git clone https://github.com/[your-username]/ukweli_lens.git
 cd ukweli_lens
 
-# Create and activate a virtual environment
+# Create and activate virtual environment
 python -m venv venv
 .\venv\Scripts\Activate
 
@@ -124,11 +128,11 @@ pip install django djangorestframework django-cors-headers chromadb sentence-tra
 python -m spacy download en_core_web_sm
 
 
-(Transformers models download automatically on first run.)
+(Transformers models download on first run.)
 
 3. Ingest Your Data
 
-Create a folder: source_documents/
+Create folder: source_documents/
 
 Add verified Kenyan PDFs (KNBS, NGEC, etc.)
 
