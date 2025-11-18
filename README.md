@@ -1,5 +1,4 @@
-# Ukweli_Lens
-Truth Verifier (Fact-Checking Engine)
+# Ukweli_Lens - Truth Verifier (Fact-Checking Engine)
 
 ## Overview
 Ukweli_Lens is a multilingual AI fact-checking engine tailored for Kenya’s linguistic and cultural realities. It detects and verifies misinformation in English, Kiswahili, and Sheng, with a focus on:
