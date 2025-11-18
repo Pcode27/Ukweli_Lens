@@ -71,3 +71,64 @@ High risk penalty applied → system detects toxicity even when unverifiable
 ## 🚀 How to Run (Backend API)
 
 ### 1. Setup
+Clone the repository
+git clone https://github.com/[your-username]/ukweli_lens.git
+cd ukweli_lens
+
+Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\Activate
+
+Install dependencies
+pip install django djangorestframework django-cors-headers chromadb sentence-transformers langchain-community pypdf spacy transformers torch "numpy<2.0.0" "blis==1.0.1" "thinc==8.2.5" "spacy==3.7.5"
+
+text
+
+### 2. Download AI Models
+python -m spacy download en_core_web_sm
+
+text
+(Transformers models download automatically on first run.)
+
+### 3. Ingest Your Data
+- Create folder: `source_documents/`  
+- Add verified Kenyan PDFs (KNBS, NGEC, etc.)  
+- Run ingestion:
+python ingest_data.py
+
+text
+This builds the `chroma_db/` vector store.
+
+### 4. Configure Django
+- Add `corsheaders` and `api` to `INSTALLED_APPS`  
+- Add `corsheaders.middleware.CorsMiddleware` to `MIDDLEWARE`  
+- Add `CORS_ALLOWED_ORIGINS`  
+- Run migrations:
+python manage.py migrate
+
+text
+
+### 5. Run the Server
+python manage.py runserver
+
+text
+
+## 🧪 Testing the API
+
+**Test 1: Factual Claim**  
+Invoke-WebRequest -Uri http://127.0.0.1:8000/api/verify/ -Method POST -ContentType "application/json" -Body '{"claim": "What is the cost of GBV in Kenya?"}'
+
+text
+Expected: VERIFIED (SUPPORTED)
+
+**Test 2: High-Risk (GBV) Claim**  
+Invoke-WebRequest -Uri http://127.0.0.1:8000/api/verify/ -Method POST -ContentType "application/json" -Body '{"claim": "She was asking for it."}'
+
+text
+Expected: INCONCLUSIVE + high ethical_risk_penalty_R_T (e.g., 0.25)
+
+**Test 3: High-Risk (Incitement) Claim**  
+Invoke-WebRequest -Uri http://127.0.0.1:8000/api/verify/ -Method POST -ContentType "application/json" -Body '{"claim": "watu madoadoa"}'
+
+text
+Expected: FALSE (REFUTED) + high ethical_risk_penalty_R_T
