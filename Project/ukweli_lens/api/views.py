@@ -18,7 +18,7 @@ print("Ukweli Lens: Initializing RAG & AI Components...")
 try:
     # --- Phase 1: RAG Retrieval Components ---
     CHROMA_PATH = "./chroma_db"
-    RETRIEVAL_MODEL_NAME = "multi-qa-mpnet-base-dot-v1" 
+    RETRIEVAL_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
     COLLECTION_NAME = "uhakiki_docs"
     
     retrieval_model = SentenceTransformer(RETRIEVAL_MODEL_NAME)
@@ -135,6 +135,23 @@ class VerifyAPIView(APIView):
 
         if evidence_chunks:
             for i, evidence in enumerate(evidence_chunks): 
+                # --- 1. Calculate Quality ---
+                # Standard cosine distance can be > 1.0. 
+                # We must clamp it at 0.0 so "far away" evidence doesn't become "negative" evidence.
+                raw_quality = 1.0 - evidence_distances[i]
+                evidence_quality = max(0.0, raw_quality) 
+
+                # --- 2. The Guardrail (Raised to 0.4) ---
+                # If evidence is less than 40% similar, ignore it.
+                if evidence_quality < 0.4: 
+                    stance_verdicts.append({
+                        "verdict": "NEUTRAL (IRRELEVANT)",
+                        "evidence": evidence,
+                        "source": evidence_metadatas[i].get('source', 'Unknown'),
+                        "page": evidence_metadatas[i].get('page', 'N/A'),
+                        "confidence": 0.0 
+                    })
+                    continue
                 inputs = stance_tokenizer(evidence, claim_text, return_tensors="pt", truncation=True, max_length=512)
                 
                 with torch.no_grad():
